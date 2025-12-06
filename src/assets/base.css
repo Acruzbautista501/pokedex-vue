@@ -30,8 +30,8 @@
 
 /* Dark mode */
 body[data-bs-theme='dark'] {
-  --background: #121212;
-  --background-secondary: #1f1f1f;
+  --background: #212631 !important;
+  --background-secondary: #212631 !important;
 
   --text-primary: #f5f5f5;
   --text-secondary: #5f7cbe;

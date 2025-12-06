@@ -46,7 +46,7 @@ export default function useSearchPokemon () {
 
     const dataTypes = await Promise.all(
       (data.types as PokemonTypeSlot[]).map(async (t) => {
-        const res = await PokemonServices.getPokemonTypes(t.type.url)
+        const res = await PokemonServices.getPokemonType(t.type.url)
         return res.data as PokemonTypeApi
       })
     )
@@ -57,7 +57,7 @@ export default function useSearchPokemon () {
 
     const dataAbilities = await Promise.all(
       (data.abilities as PokemonAbilitieSlot[]).map(async (t) => {
-        const res = await PokemonServices.getPokemonAbilities(t.ability.url)
+        const res = await PokemonServices.getPokemonAbilitie(t.ability.url)
         return res.data as PokemonAbilitieApi
       })
     )

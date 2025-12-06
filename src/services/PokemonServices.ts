@@ -7,10 +7,10 @@ export default {
   getPokemonSpecies(url: string) {
     return api.get(url)
   },
-  getPokemonTypes(url: string) {
+  getPokemonType(url: string) {
     return api.get(url)
   },
-  getPokemonAbilities(url: string) {
+  getPokemonAbilitie(url: string) {
     return api.get(url)
   },
   getTypes() {
@@ -19,5 +19,10 @@ export default {
   getAbilities() {
     return api.get('/ability')
   },
-
+  getPokemonsType(id: number) {
+    return api.get(`/type/${id}`)
+  },
+  getPokemonUrl(url: string){
+    return api.get(url)
+  }
 }

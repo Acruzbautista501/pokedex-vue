@@ -1,15 +1,26 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
+const goToTypesPokemon = () => {
+  router.push({ path: '/tipos'})
+}
+
 </script>
 
 <template>
   <CContainer>
     <h2 class="text-center pt-4 fw-bold display-3">¿Quieres saber más?</h2>
     <p class="fs-4 fw-semibold text-center pb-5">
-      Busca mediante los filtados diponilbe.
+      Busca mediante los filtros diponibles.
     </p>
     <CRow class="g-4 g-lg-5 d-flex justify-content-center">
       <CCol xs="12" md="6" xl="4">
-        <CButton class="border rounded rounded-5 p-4 w-100 bg-type d-flex justify-content-start position-relative z-2">
+        <CButton
+          class="border rounded rounded-5 p-4 w-100 bg-type d-flex justify-content-start position-relative z-2"
+          @click="goToTypesPokemon()"
+        >
           <span class="fw-bold fs-2">Tipos</span>
           <div class="pokeball-container">
             <CImage src="/img/pokebola-blanca.png" class="pokeball-img"/>
