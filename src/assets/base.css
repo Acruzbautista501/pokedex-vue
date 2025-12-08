@@ -89,3 +89,46 @@ body[data-bs-theme='dark'] {
 .modal-header .btn-close {
   display: none !important;
 }
+.my-pagination .page-link {
+  color: #ee0000 ;
+  transition: 0.3s;
+}
+
+.my-pagination .page-link:hover {
+  background: linear-gradient( 135deg, #ee0000 0%, #cc0000 55%, #b30000 100% ) !important;
+  color: white;
+  border-color: #ee0000;
+}
+
+.my-pagination .active .page-link {
+  background: linear-gradient( 135deg, #ee0000 0%, #cc0000 55%, #b30000 100% ) !important;
+  border-color: #ee0000 ;
+  color: white;
+}
+
+.my-pagination .disabled .page-link {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.my-pagination {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 5px;
+}
+
+
+/* XS: botones más pequeños */
+@media (max-width: 576px) {
+  .my-pagination::-webkit-scrollbar {
+    height: 4px;
+  }
+  .my-pagination {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 5px;
+    padding-left: 10rem !important;
+  }
+
+}
+

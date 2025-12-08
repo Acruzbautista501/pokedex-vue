@@ -32,7 +32,6 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
     try {
       const typesPoke = PokemonServices.getTypes()
       const { data } = await typesPoke
-      console.log(data)
 
       const detailTypes = await Promise.all(
         (data.results as PokemonTypeListItem[]).map(async (t) => {
@@ -79,6 +78,7 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
         (data.pokemon as PokemonTypeSlot[]).map(async (p) => {
           const res = await PokemonServices.getPokemonUrl(p.pokemon.url)
           const response = res.data
+          // console.log(response)
 
         const dataAbilities = await Promise.all(
           (response.abilities as PokemonAbilitieSlot[]).map(async (t) => {
@@ -90,12 +90,26 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
           ability.names.find(n => n.language.name === 'es')?.name || ability.name
         )
 
+          let iconLink: string
+          switch (data.name) {
+            case 'stellar':
+              iconLink = 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stellar.svg' // SVG genérico Stellar
+              break
+            case 'unknown':
+              iconLink = "https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/help-circle.svg"; // SVG genérico Unknown
+              break
+            default:
+              iconLink = `https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/${data.name}.svg`
+          }
+
         return {
           id: res.data.id,
           name: res.data.name,
-          image: res.data.sprites.other['official-artwork'].front_default,
+          image: res.data.sprites.other['showdown'].front_default,
           abilities: abilitiesEs,
           height: res.data.height / 10,
+          color: typeColors[data.name] || "#999",
+          icon: iconLink,
           weight: res.data.weight / 10,
         }
         })
@@ -106,10 +120,24 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
       console.log('Error al cargar los pokémon:', error)
     }
    }
+
+  //  async function loadPokemonType(id: string) {
+  //   try {
+  //     const pokeId = PokemonServices.getPokemon(id)
+  //     const pokeData = await pokeId
+
+  //     const data = pokeData.data
+
+  //   } catch (error) {
+
+  //   }
+
+  //  }
   return {
     pokeTypes,
     pokeCard,
     loadTypesPoke,
-    loadPokemonsType
+    loadPokemonsType,
+    // loadPokemonType
   }
 })

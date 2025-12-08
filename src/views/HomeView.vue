@@ -23,7 +23,7 @@ const goToTypesPokemon = () => {
         >
           <span class="fw-bold fs-2">Tipos</span>
           <div class="pokeball-container">
-            <CImage src="/img/pokebola-blanca.png" class="pokeball-img"/>
+            <CImage src="/img/pokebola-blanca.png" class="pokeball-img poke-type"/>
           </div>
         </CButton>
       </CCol>
@@ -84,23 +84,47 @@ const goToTypesPokemon = () => {
     background-color: #D2968F;
     color: #FFFFFF;
   }
+  .bg-type:hover {
+    background-color: #f8b5ad;
+    color: #976d68;
+    border: 1px solid #f8b5ad !important;
+  }
   .bg-abilities {
     background-color: #6BB4F6;
     color: #FFFFFF;
+  }
+  .bg-abilities:hover {
+    background-color: #89c4f8;
+    color: #4a85b8;
+    border: 1px solid #89c4f8 !important;
   }
   .bg-moves {
     background-color: #F78276;
     color: #FFFFFF;
   }
+  .bg-moves:hover {
+    background-color: #faa9a0;
+    color: #bd6258;
+    border: 1px solid #faa9a0!important;
+  }
   .bg-items {
     background-color: #FFD055;
     color: #FFFFFF;
+  }
+  .bg-items:hover {
+    background-color: #f7d788;
+    color: #c09b3e;
+    border: 1px solid #f7d788!important;
   }
   .bg-generation {
     background-color: #AB70C3;
     color: #FFFFFF;
   }
-
+  .bg-generation:hover {
+    background-color: #bb95ca;
+    color: #7a478f;
+    border: 1px solid #bb95ca!important;
+  }
 
   /* Contenedor de la pokebola */
 .pokeball-container {
@@ -114,7 +138,7 @@ const goToTypesPokemon = () => {
 /* Imagen pokebola */
 .pokeball-img {
   width: 93px;
-  opacity: 0.12;
+  opacity: 0.15;
 }
 
 /* Responsive para móviles */
