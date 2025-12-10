@@ -1,8 +1,9 @@
 
-import type { PokeCard, PokemonAbilitieApi, PokemonAbilitieSlot, PokemonTypeApi, PokemonTypeListItem, PokemonTypeSlot, PokeTypes } from '@/interfaces/PokemonType'
+import type { PokemonName } from '@/interfaces/Pokemon'
+import type { EvolutionChain, EvolutionChainResponse, PokeCard, PokemonAbilitieApi, PokemonAbilitieSlot, PokemonGenera, PokemonGenerationApi, PokemonHabitatApi, PokemonMove, PokemonMoveApi, PokemonSlot, PokemonSpecies, PokemonSpeciesName, PokemonType, PokemonTypeApi, PokemonTypeListItem, PokemonTypeSlot, PokemonWeaknessApi, PokeTypes } from '@/interfaces/PokemonType'
 import PokemonServices from '@/services/PokemonServices'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 const typeColors: Record<string, string> = {
   normal: "#A8A77A",
@@ -28,6 +29,27 @@ const typeColors: Record<string, string> = {
 export const useTypePokemonStore = defineStore('typeStore', () => {
   const pokeTypes = ref<PokeTypes[]>([])
   const pokeCard = ref<PokeCard[]>([])
+  const pokemon = reactive<PokemonType>({
+    id: '',
+    name: '',
+    nameEs: '',
+    image: '',
+    types: '',
+    weaknesses: '',
+    abilities: '',
+    height: '',
+    weight: '',
+    stats: '',
+    descriptionEs: '',
+    specie: '',
+    base_experience: '',
+    crie: '',
+    moves: '',
+    generation: '',
+    habitat: '',
+    colors: '',
+    evolutions: []
+  })
    async function loadTypesPoke() {
     try {
       const typesPoke = PokemonServices.getTypes()
@@ -68,11 +90,11 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
     }
    }
 
-   async function loadPokemonsType(id: number) {
+   async function loadPokemonsType(id: string) {
     try {
       const typePokes = PokemonServices.getPokemonsType(id)
       const { data } = await typePokes
-      console.log(data)
+
 
       const pokemonDetails = await Promise.all (
         (data.pokemon as PokemonTypeSlot[]).map(async (p) => {
@@ -121,23 +143,164 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
     }
    }
 
-  //  async function loadPokemonType(id: string) {
-  //   try {
-  //     const pokeId = PokemonServices.getPokemon(id)
-  //     const pokeData = await pokeId
+   async function loadPokemonType(id: string) {
+    try {
+      const pokeId = PokemonServices.getPokemon(id)
+      const pokeData = await pokeId
 
-  //     const data = pokeData.data
+      const data = pokeData.data
 
-  //   } catch (error) {
+      const dataSpecies = await PokemonServices.getPokemonUrl(data.species.url)
+      const species = dataSpecies.data
 
-  //   }
+      const nameEs = species.names.find(
+        (n: PokemonName) => n.language.name === 'es'
+      )?.name || data.name
 
-  //  }
+
+      const descriptionEs = species.flavor_text_entries.find(
+        (flavor: PokemonSpecies) => flavor.language.name === 'es'
+      )?.flavor_text.replace(/\f/g, ' ') || 'Sin descripción'
+
+
+      const genereEs = species.genera.find(
+        (g: PokemonGenera) => g.language.name === 'es'
+      )?.genus || data.name
+
+      const genResponse = await PokemonServices.getPokemonGeneration(species.generation.url)
+      const genData = genResponse.data as PokemonGenerationApi
+
+      const generationEs =
+        genData.names.find(n => n.language.name === 'es')?.name || genData.name
+
+      const habitatResponse = await PokemonServices.getPokemonGeneration(species.habitat.url)
+      const habitatData = habitatResponse.data as PokemonHabitatApi
+
+      const habitatEs =
+        habitatData.names.find(n => n.language.name === 'es')?.name || habitatData.name
+
+      const dataTypes: PokemonTypeApi[] = await Promise.all(
+        (data.types as PokemonSlot[]).map(async (t) => {
+          const res = await PokemonServices.getPokemonType(t.type.url)
+          return res.data as PokemonTypeApi
+        })
+      )
+
+      const typeEs = dataTypes.map(
+        type => type.names.find(n => n.language.name === 'es')?.name || type.name
+      )
+
+      const typeColorsArray = data.types.map((t: PokemonSlot) => {
+        const typeNameEn = dataTypes.find(dt => dt.name === t.type.name)?.names
+          .find(n => n.language.name === 'en')?.name
+          ?? t.type.name
+
+        return typeColors[typeNameEn.toLowerCase()] ?? "#999"
+      })
+      const dataWeaknesses = await Promise.all(
+        dataTypes.flatMap((type) =>
+          (type as PokemonWeaknessApi).damage_relations.double_damage_from.map(async (w) => {
+            const res = await PokemonServices.getPokemonType(w.url)
+            return res.data as PokemonWeaknessApi
+          })
+        )
+      )
+
+      const weaknessEs = dataWeaknesses.map((type) =>
+        type.names.find((n) => n.language.name === 'es')?.name || type.name
+      )
+
+      const dataAbilities = await Promise.all(
+        (data.abilities as PokemonAbilitieSlot[]).map(async (t) => {
+          const res = await PokemonServices.getPokemonAbilitie(t.ability.url)
+          return res.data as PokemonAbilitieApi
+        })
+      )
+
+      const abilitiesEs = dataAbilities.map(ability =>
+        ability.names.find(n => n.language.name === 'es')?.name || ability.name
+      )
+
+      const dataMoves = await Promise.all(
+        (data.moves as PokemonMove[]).map(async (m) => {
+          const res = await PokemonServices.getPokemonMove(m.move.url)
+          return res.data as PokemonMoveApi
+        })
+      )
+
+      const moveEs = dataMoves.map(move =>
+        move.names.find(n => n.language.name === 'es')?.name || move.name
+      )
+
+      const evoChainUrl = species.evolution_chain.url
+      const evoResponse = await PokemonServices.getEvolutionChain(evoChainUrl)
+      const evoData = evoResponse.data as EvolutionChainResponse
+
+      const evolutions: { name: string; nameEs: string; image: string }[] = []
+
+      // función recursiva tipada
+      const parseEvolutionChain = async (chain: EvolutionChain): Promise<void> => {
+        const pokeName = chain.species.name
+
+        const pData = await PokemonServices.getPokemon(pokeName)
+
+        const pSpecies = await PokemonServices.getPokemonUrl(pData.data.species.url)
+
+        const nameEs =
+          pSpecies.data.names.find((n: PokemonSpeciesName) => n.language.name === 'es')
+            ?.name || pokeName
+
+        evolutions.push({
+          name: pokeName,
+          nameEs,
+          image: pData.data.sprites.other['official-artwork'].front_default
+        })
+
+        if (chain.evolves_to.length > 0) {
+          for (const evo of chain.evolves_to) {
+            await parseEvolutionChain(evo)
+          }
+        }
+      }
+
+      await parseEvolutionChain(evoData.chain)
+
+      Object.assign(pokemon, {
+        id: data.id,
+        name: data.name,
+        nameEs: nameEs,
+        image: data.sprites.other['official-artwork'].front_default,
+        types: typeEs,
+        weaknesses: weaknessEs,
+        abilities: abilitiesEs,
+        height: data.height / 10,
+        weight: data.weight / 10,
+        stats: data.stats,
+        descriptionEs: descriptionEs,
+        specie: genereEs,
+        evolutions: evolutions,
+        crie: data.cries.latest,
+        moves: moveEs,
+        generation: generationEs,
+        habitat:habitatEs,
+        base_experience: data.base_experience,
+        colors: typeColorsArray
+      },
+
+      console.log(pokemon)
+      )
+
+    } catch (error) {
+      console.log('Erro al cargar pokemón:', error)
+    }
+
+   }
   return {
     pokeTypes,
     pokeCard,
+    pokemon,
     loadTypesPoke,
     loadPokemonsType,
-    // loadPokemonType
+    loadPokemonType
   }
 })

@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { useTypePokemonStore } from '@/stores/useTypePokemonStore';
 import { onMounted, ref, computed, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const pokemonsType = useTypePokemonStore()
 const route = useRoute()
+const router = useRouter()
 
-const idParam = route.params.id
-const idName = route.params.name
-const id = Number(idParam)
+const idName = route.params.name as string
+const idNameEs = computed(() => {
+  return pokemonsType.pokeTypes.find(t => t.name === idName)?.nameEs ?? idName
+})
+
+const name = idName
 
 // ---------------- BUSCADOR ----------------
 const search = ref("")
@@ -58,8 +62,17 @@ watch([search, pageSize], () => {
 // Al iniciar
 onMounted(() => {
   currentPage.value = 1
-  pokemonsType.loadPokemonsType(id)
+  pokemonsType.loadPokemonsType(name)
+  pokemonsType.loadTypesPoke()
 })
+
+const goToPokeTypeDetail = (name: string, pokemon: string) => {
+  router.push({
+    name: 'PokemonTipoDetalles',
+    params: { name, pokemon }
+  })
+}
+
 </script>
 
 
@@ -67,7 +80,7 @@ onMounted(() => {
 <template>
   <CContainer>
     <h2 class="text-center fw-bold display-3">
-      {{ idName }}
+      {{ idNameEs }}
     </h2>
     <CRow class="pb-3 pt-4">
       <CCol xs="12" md="6">
@@ -102,6 +115,7 @@ onMounted(() => {
         <CCard
         class="h-100 position-relative overflow-hidden card-type"
         :style="{ backgroundColor: card.color, borderColor: card.color }"
+        @click="goToPokeTypeDetail(idName, card.name)"
         >
           <div class="d-flex justify-content-center align-content-center position-relative overflow-hidden z-2">
             <CCardBody>

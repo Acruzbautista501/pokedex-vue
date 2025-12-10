@@ -7,10 +7,19 @@ export default {
   getPokemonSpecies(url: string) {
     return api.get(url)
   },
+  getEvolutionChain(url: string){
+    return api.get(url)
+  },
   getPokemonType(url: string) {
     return api.get(url)
   },
   getPokemonAbilitie(url: string) {
+    return api.get(url)
+  },
+  getPokemonMove(url: string) {
+    return api.get(url)
+  },
+  getPokemonGeneration(url: string) {
     return api.get(url)
   },
   getTypes() {
@@ -19,7 +28,7 @@ export default {
   getAbilities() {
     return api.get('/ability')
   },
-  getPokemonsType(id: number) {
+  getPokemonsType(id: string) {
     return api.get(`/type/${id}`)
   },
   getPokemonUrl(url: string){

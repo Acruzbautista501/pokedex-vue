@@ -7,10 +7,11 @@ const typePoke = useTypePokemonStore()
 
 const router = useRouter()
 
-const goToPokeType = (id: number, name: string) => {
+const goToPokeType = (name: string, nameEs: string) => {
   router.push({
     name: 'PokemonTipo',
-    params: { id, name }
+    params: { name },
+    query: {nameEs }
   })
 }
 
@@ -35,7 +36,7 @@ onMounted(()=> {
         <CButton
           class="border btn-type rounded rounded-5 p-4 w-100 d-flex justify-content-start position-relative z-2 text-white"
           :style="{ backgroundColor: type.color, borderColor: type.color }"
-          @click="goToPokeType(type.id, type.nameEs)"
+          @click="goToPokeType(type.name, type.nameEs)"
         >
           <span class="fw-bold fs-2">{{ type.nameEs }}</span>
           <div class="pokeball-container">
