@@ -5,7 +5,7 @@ import PokemonServices from '@/services/PokemonServices'
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
-const typeColors: Record<string, string> = {
+const pokeColors: Record<string, string> = {
   normal: "#A8A77A",
   fire: "#EE8130",
   water: "#6390F0",
@@ -47,8 +47,9 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
     moves: '',
     generation: '',
     habitat: '',
-    colors: '',
-    evolutions: []
+    colors: [],
+    evolutions: [],
+    weaknessColors: []
   })
    async function loadTypesPoke() {
     try {
@@ -78,7 +79,7 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
             id: detail.data.id,
             name: detail.data.name,
             nameEs: typesEs,
-            color: typeColors[pokeDetail.name] || "#999",
+            color: pokeColors[pokeDetail.name] || "#999",
             icon: iconUrl
           }
         })
@@ -130,7 +131,7 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
           image: res.data.sprites.other['showdown'].front_default,
           abilities: abilitiesEs,
           height: res.data.height / 10,
-          color: typeColors[data.name] || "#999",
+          color: pokeColors[data.name] || "#999",
           icon: iconLink,
           weight: res.data.weight / 10,
         }
@@ -195,7 +196,7 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
           .find(n => n.language.name === 'en')?.name
           ?? t.type.name
 
-        return typeColors[typeNameEn.toLowerCase()] ?? "#999"
+        return pokeColors[typeNameEn.toLowerCase()] ?? "#999"
       })
       const dataWeaknesses = await Promise.all(
         dataTypes.flatMap((type) =>
@@ -206,9 +207,14 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
         )
       )
 
-      const weaknessEs = dataWeaknesses.map((type) =>
-        type.names.find((n) => n.language.name === 'es')?.name || type.name
+      const weaknessEs = dataWeaknesses.map((weakness) =>
+        weakness.names.find((n) => n.language.name === 'es')?.name || weakness.name
       )
+
+      const weaknessColors = dataWeaknesses.map((weakness) => {
+        const nameEn = weakness.name.toLowerCase()
+        return pokeColors[nameEn] || "#999"
+      })
 
       const dataAbilities = await Promise.all(
         (data.abilities as PokemonAbilitieSlot[]).map(async (t) => {
@@ -253,7 +259,7 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
         evolutions.push({
           name: pokeName,
           nameEs,
-          image: pData.data.sprites.other['official-artwork'].front_default
+          image: pData.data.sprites.other['showdown'].front_default
         })
 
         if (chain.evolves_to.length > 0) {
@@ -284,7 +290,8 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
         generation: generationEs,
         habitat:habitatEs,
         base_experience: data.base_experience,
-        colors: typeColorsArray
+        colors: typeColorsArray,
+        weaknessColors
       },
 
       console.log(pokemon)

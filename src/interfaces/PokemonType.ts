@@ -165,7 +165,8 @@ export interface PokemonType {
   moves: string
   generation: string
   habitat: string
-  colors: string
+  colors: string[]
+  weaknessColors: string[]
 }
 
 export interface Evolution {
