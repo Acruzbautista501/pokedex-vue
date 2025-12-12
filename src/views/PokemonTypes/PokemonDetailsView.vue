@@ -25,6 +25,16 @@ const toggleAudio = () => {
   isPlaying.value = !isPlaying.value
 }
 
+
+const statTranslations: Record<string, string> = {
+  hp: 'PS',
+  attack: 'Ataque',
+  defense: 'Defensa',
+  'special-attack': 'At. Esp.',
+  'special-defense': 'Def. Esp.',
+  speed: 'Velocidad'
+}
+
 onMounted(() => {
   pokeDetail.loadPokemonType(idName)
 })
@@ -72,7 +82,7 @@ onMounted(() => {
             md="4"
           >
             <CCard
-              class="border-2 border-danger p-3"
+              class="border-2 border-danger p-3 "
             >
               <CCardImage orientation="top" :src="evolution.image" class="pokemon-img" />
               <CCardBody>
@@ -105,7 +115,7 @@ onMounted(() => {
         </CBadge>
       </div>
       <div class="pt-3 pb-3">
-        <h3 class=" fw-semibold pb-2 text-decoration-underline">Descripción</h3>
+        <h3 class="fw-semibold pb-2 text-decoration-underline">Descripción</h3>
         <p class="fs-5">
           {{ pokeDetail.pokemon.descriptionEs }}
         </p>
@@ -238,6 +248,26 @@ onMounted(() => {
           </CTabPane>
         </CTabContent>
       </div>
+      <div class="pt-3 pb-3">
+        <h3 class="fw-semibold pb-2 text-decoration-underline">
+          Estadísticas
+        </h3>
+        <CCard class="border-2 border-danger shadow">
+          <CCardBody class="m-3">
+            <div v-for="stat in pokeDetail.pokemon.stats" :key="stat.stat.name" class="stat-row">
+              <span>
+                {{ statTranslations[stat.stat.name] || stat.stat.name.toUpperCase()}}
+              </span>
+              <div class="stat-bar">
+                <div
+                  class="stat-bar-fill"
+                  :style="{ width: stat.base_stat + '%', backgroundColor: pokeDetail.pokemon.colors[0] }"
+                ></div>
+              </div>
+            </div>
+          </CCardBody>
+        </CCard>
+      </div>
     </CCol>
   </CRow>
 </CContainer>
@@ -246,7 +276,7 @@ onMounted(() => {
 <style scoped>
   .pokemon-img {
     width: 100%;          /* tamaño uniforme */
-    height: 130px;         /* cuadrado consistente */
+    height: 100px;         /* cuadrado consistente */
     object-fit: contain;   /* mantiene proporción sin recortar */
     display: block;
     margin: 0 auto;        /* centrar */
@@ -328,5 +358,25 @@ onMounted(() => {
 /* Ícono */
 .poke-center i {
   font-size: 20px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.stat-bar {
+  flex: 1;
+  height: 8px;
+  background: #eee;
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 50px;
 }
 </style>

@@ -39,7 +39,7 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
     abilities: '',
     height: '',
     weight: '',
-    stats: '',
+    stats: [],
     descriptionEs: '',
     specie: '',
     base_experience: '',
@@ -174,12 +174,19 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
       const generationEs =
         genData.names.find(n => n.language.name === 'es')?.name || genData.name
 
-      const habitatResponse = await PokemonServices.getPokemonGeneration(species.habitat.url)
-      const habitatData = habitatResponse.data as PokemonHabitatApi
+      let habitatEs = "Desconocido"
 
-      const habitatEs =
-        habitatData.names.find(n => n.language.name === 'es')?.name || habitatData.name
+      if (species.habitat && species.habitat.url) {
+        try {
+          const habitatResponse = await PokemonServices.getPokemonHabitat(species.habitat.url)
+          const habitatData = habitatResponse.data as PokemonHabitatApi
 
+          habitatEs =
+            habitatData.names.find(n => n.language.name === 'es')?.name || habitatData.name
+        } catch (err) {
+          console.warn("No se pudo cargar el hábitat:", err)
+        }
+      }
       const dataTypes: PokemonTypeApi[] = await Promise.all(
         (data.types as PokemonSlot[]).map(async (t) => {
           const res = await PokemonServices.getPokemonType(t.type.url)
@@ -285,7 +292,7 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
         descriptionEs: descriptionEs,
         specie: genereEs,
         evolutions: evolutions,
-        crie: data.cries.latest,
+        crie: data.cries?.latest || data.cries?.legacy || null,
         moves: moveEs,
         generation: generationEs,
         habitat:habitatEs,

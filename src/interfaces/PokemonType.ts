@@ -158,13 +158,13 @@ export interface PokemonType {
   abilities: string
   height: string
   weight: string
-  stats: string
+  stats: PokemonStat[]
   descriptionEs: string
   specie: string
   evolutions: Evolution[]
   moves: string
   generation: string
-  habitat: string
+  habitat?: string
   colors: string[]
   weaknessColors: string[]
 }
@@ -278,5 +278,13 @@ export interface PokemonWeaknessApi {
     half_damage_to: WeaknessReference[]
     no_damage_from: WeaknessReference[]
     no_damage_to: WeaknessReference[]
+  }
+}
+
+export interface PokemonStat {
+  base_stat: number,
+  effort: number,
+  stat: {
+      name: string,
   }
 }

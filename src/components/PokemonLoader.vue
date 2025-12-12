@@ -32,7 +32,7 @@ const visible = ref(true)
 onMounted(() => {
   setTimeout(() => {
     visible.value = false
-  }, 2000) // 3 segundos
+  }, 3000) // 3 segundos
 })
 
 const computedStyle = computed<CSSProperties>(() => ({

@@ -22,6 +22,9 @@ export default {
   getPokemonGeneration(url: string) {
     return api.get(url)
   },
+  getPokemonHabitat(url: string) {
+    return api.get(url)
+  },
   getTypes() {
     return api.get('/type')
   },
