@@ -25,7 +25,7 @@ onMounted(()=> {
   <CContainer>
     <h2 class="text-center pt-4 fw-bold display-3">¿Quieres saber más?</h2>
     <p class="fs-4 fw-semibold text-center pb-5">
-      Busca mediante los filtados diponilbe.
+      Busca mediante los tipos diponilbes.
     </p>
     <CRow class="g-4 g-lg-5 pb-5">
       <CCol

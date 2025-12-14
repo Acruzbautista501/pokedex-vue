@@ -56,6 +56,9 @@ const { loadPokemon, searchPokemon, showPokeSearchModal, pokemon } = useSearchPo
           ¿Qué Pokémon deseas búscar?
         </h1>
         <section class="p-3 mb-3">
+        <h3 class="mb-2 fs-5 mx-4 text-white">
+          Busca el Pokémon por su nombre o id.
+        </h3>
         <CForm
           class="d-flex justify-content-center align-items-center rounded-5 border p-2 bg-body"
           style="background-color: #fff;"
@@ -71,7 +74,8 @@ const { loadPokemon, searchPokemon, showPokeSearchModal, pokemon } = useSearchPo
             <CFormInput
               class="border-0"
               type="search"
-              placeholder="Busca el Pokémon por nombre"
+              label=""
+              placeholder="Ejemplo: Pikachu o 25"
               v-model="searchPokemon"
             />
 

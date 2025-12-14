@@ -36,5 +36,8 @@ export default {
   },
   getPokemonUrl(url: string){
     return api.get(url)
+  },
+  getPokemonMoves(limit: number) {
+    return api.get(`/move?limit=${limit}`)
   }
 }

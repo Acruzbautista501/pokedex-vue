@@ -40,6 +40,15 @@ export const useSwalStore = defineStore('swal', () => {
     })
   }
 
+
+  const warning = (title: string, text?: string) => {
+    return fire({
+      icon: 'warning',
+      title,
+      text
+    })
+  }
+
   const error = (title: string, text?: string) => {
     return fire({
       icon: 'error',
@@ -50,7 +59,7 @@ export const useSwalStore = defineStore('swal', () => {
 
   const confirm = (title: string, text?: string) => {
     return fire({
-      icon: 'warning',
+      icon: 'question',
       title,
       text,
       showCancelButton: true,
@@ -61,6 +70,7 @@ export const useSwalStore = defineStore('swal', () => {
 
   return {
     fire,
+    warning,
     success,
     error,
     confirm

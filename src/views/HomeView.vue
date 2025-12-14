@@ -7,10 +7,14 @@ const goToTypesPokemon = () => {
   router.push({ path: '/tipos'})
 }
 
+const goToMovesPokemon = () => {
+  router.push({ path: '/movimientos' })
+}
+
 </script>
 
 <template>
-  <CContainer>
+  <CContainer class="mb-5 pb-5">
     <h2 class="text-center pt-4 fw-bold display-3">¿Quieres saber más?</h2>
     <p class="fs-4 fw-semibold text-center pb-5">
       Busca mediante los filtros diponibles.
@@ -28,7 +32,8 @@ const goToTypesPokemon = () => {
         </CButton>
       </CCol>
       <CCol xs="12" md="6" xl="4">
-        <CButton class="border rounded rounded-5 p-4 w-100 bg-abilities d-flex justify-content-start position-relative z-2">
+        <CButton
+          class="border rounded rounded-5 p-4 w-100 bg-abilities d-flex justify-content-start position-relative z-2">
           <span class="fw-bold fs-2">Habilidades</span>
           <div class="pokeball-container">
             <CImage src="/img/pokebola-blanca.png" class="pokeball-img"/>
@@ -36,7 +41,10 @@ const goToTypesPokemon = () => {
         </CButton>
       </CCol>
       <CCol xs="12" md="6" xl="4">
-        <CButton class="border rounded rounded-5 p-4 w-100 bg-moves d-flex justify-content-start position-relative z-2">
+        <CButton
+            class="border rounded rounded-5 p-4 w-100 bg-moves d-flex justify-content-start position-relative z-2"
+            @click="goToMovesPokemon()"
+          >
           <span class="fw-bold fs-2">Movimientos</span>
           <div class="pokeball-container">
             <CImage src="/img/pokebola-blanca.png" class="pokeball-img"/>

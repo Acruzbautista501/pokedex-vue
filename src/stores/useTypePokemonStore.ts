@@ -4,6 +4,7 @@ import type { EvolutionChain, EvolutionChainResponse, PokeCard, PokemonAbilitieA
 import PokemonServices from '@/services/PokemonServices'
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
+import { useSwalStore } from './Swal'
 
 const pokeColors: Record<string, string> = {
   normal: "#A8A77A",
@@ -25,6 +26,8 @@ const pokeColors: Record<string, string> = {
   steel: "#B7B7CE",
   fairy: "#D685AD"
 }
+
+const swal = useSwalStore()
 
 export const useTypePokemonStore = defineStore('typeStore', () => {
   const pokeTypes = ref<PokeTypes[]>([])
@@ -88,6 +91,7 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
 
     } catch (error) {
       console.log('Error al cargar tipos:', error)
+      swal.error('Error', 'Error al cargar los movimientos de los pokemones.')
     }
    }
 
@@ -113,17 +117,17 @@ export const useTypePokemonStore = defineStore('typeStore', () => {
           ability.names.find(n => n.language.name === 'es')?.name || ability.name
         )
 
-          let iconLink: string
-          switch (data.name) {
-            case 'stellar':
-              iconLink = 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stellar.svg' // SVG genérico Stellar
-              break
-            case 'unknown':
-              iconLink = "https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/help-circle.svg"; // SVG genérico Unknown
-              break
-            default:
-              iconLink = `https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/${data.name}.svg`
-          }
+        let iconLink: string
+        switch (data.name) {
+          case 'stellar':
+            iconLink = 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/stellar.svg' // SVG genérico Stellar
+            break
+          case 'unknown':
+            iconLink = "https://cdn.jsdelivr.net/npm/feather-icons/dist/icons/help-circle.svg"; // SVG genérico Unknown
+            break
+          default:
+            iconLink = `https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/${data.name}.svg`
+        }
 
         return {
           id: res.data.id,
