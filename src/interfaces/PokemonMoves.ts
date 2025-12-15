@@ -26,6 +26,13 @@ export interface NameLanguage {
   }[]
 }
 
+export interface filterSearch {
+  moves: {
+    nameEs: string
+  }[]
+  search: string
+}
+
 // export interface MoveDetails {
 //     id: number
 //     name: string

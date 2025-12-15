@@ -4,9 +4,16 @@ import { onMounted, ref, computed, watch } from 'vue';
 
 const movePokemon  = useMovePokemonStore()
 
-const moveLimit = movePokemon.limit
+const moveLimit = computed({
+  get: () => movePokemon.limit,
+  set: (value) => {
+    movePokemon.limit = Number(value)
+  }
+})
+
 
 const search = ref<string>("")
+const searchSubmit = ref<string>("")
 
 const pageSize = ref<number>(20)
 const pageOptions = [20, 40, 80, 120]
@@ -44,6 +51,24 @@ const endItem = computed(() => {
   return Math.min(currentPage.value * pageSize.value, totalItems.value)
 })
 
+const onSearch = () => {
+  if (!searchSubmit.value.trim() && !moveLimit.value) {
+    return
+  }
+
+  if (searchSubmit.value.trim()) {
+    search.value = searchSubmit.value
+  }
+
+  if (moveLimit.value && Number(moveLimit.value) > 0) {
+    movePokemon.loadPokemonMoves(moveLimit.value)
+  }
+
+  currentPage.value = 1
+}
+
+
+
 // Reset paginación al cambiar búsqueda o pageSize
 watch([search, pageSize], () => {
   currentPage.value = 1
@@ -51,7 +76,7 @@ watch([search, pageSize], () => {
 
 onMounted(() => {
    currentPage.value = 1
-  movePokemon.loadPokemonMoves(moveLimit)
+  movePokemon.loadPokemonMoves(moveLimit.value)
 })
 
 
@@ -64,21 +89,41 @@ onMounted(() => {
       Busca mediante los movimientos diponilbes.
     </p>
     <section>
-      <CForm
-        class="d-flex justify-content-center align-items-center border p-2 bg-body mt-3 mb-3 mx-auto w-50"
-        @submit.prevent="movePokemon.loadPokemonMoves(moveLimit)"
-      >
-        <CFormInput
-          class="border-0"
-          type="search"
-          label=""
-          placeholder="Ejemplo: Pikachu o 25"
-          v-model="moveLimit"
-        />
-        <CButton type="submit" color="info" class="text-white p-2 fw-bold fs-6">
-          Buscar
-        </CButton>
-      </CForm>
+      <CCard class="border-danger border| mb-3">
+        <CCardBody>
+          <CForm
+              class="bg-body mt-3 mb-3"
+              @submit.prevent="onSearch"
+            >
+            <CRow class="g-3">
+              <CCol xs="12" md="6" xl="5">
+                <CFormInput
+                  class="border-1"
+                  type="text"
+                  label="Buscar movimiento"
+                  placeholder="Ejemplo: Impactrueno o 25"
+                  v-model="searchSubmit"
+                />
+              </CCol>
+              <CCol xs="12" md="6" xl="5">
+                <CFormInput
+                  class="border-1"
+                  type="search"
+                  label="Limite de movimientos"
+                  placeholder="Ejemplo: Pikachu o 25"
+                  v-model="moveLimit"
+                />
+              </CCol>
+              <div class="text-end">
+                <CButton type="submit" color="info" class="text-white p-2 fw-bold">
+                  Buscar
+                </CButton>
+              </div>
+            </CRow>
+            </CForm>
+        </CCardBody>
+      </CCard>
+
     </section>
     <CRow class="pb-3 pt-4">
       <CCol xs="12" md="6">
@@ -111,11 +156,11 @@ onMounted(() => {
         :key="move.id"
       >
       <CCard class="border border-danger shadow p-4">
-        <CardBoddy class="text-center">
+        <CCardBody class="text-center">
           <span class="fw-semibol text-danger fs-5">
             {{ move.nameEs }}
           </span>
-        </CardBoddy>
+        </CCardBody>
       </CCard>
       </CCol>
     </CRow>
